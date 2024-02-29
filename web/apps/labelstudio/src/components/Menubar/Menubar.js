@@ -216,7 +216,7 @@ export const Menubar = ({
 
                 <VersionNotifier showNewVersion/>
 
-                <Menu.Item
+                {/* <Menu.Item
                   label="API"
                   href="/docs/api"
                   icon={<IconTerminal/>}
@@ -240,7 +240,7 @@ export const Menubar = ({
                   icon={<LsSlack/>}
                   target="_blank"
                 />
-
+ */}
                 <VersionNotifier showCurrentVersion/>
 
                 <Menu.Divider/>
