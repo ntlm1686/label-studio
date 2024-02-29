@@ -5,6 +5,8 @@ import Input from 'antd/lib/input/index';
 import { observer } from 'mobx-react';
 import { destroy, isAlive, types } from 'mobx-state-tree';
 
+import { AudioOutlined, StopOutlined } from '@ant-design/icons';
+
 import InfoModal from '../../../components/Infomodal/Infomodal';
 import Registry from '../../../core/Registry';
 import Tree from '../../../core/Tree';
@@ -484,13 +486,22 @@ const HtxTextArea = observer(({ item }) => {
           }}
         >
           {/* <Button onClick={test_increment} style={{ marginRight: '10px' }}> */}
-          <Button onClick={toggleRecording} style={{ marginRight: '10px' }}>
-            {isRecording ? 'Stop Recording' : 'Start Recording'}
-          </Button>
           <Form.Item style={itemStyle}>
-            {rows === 1
-              ? <Input {...props} aria-label="TextArea Input"/>
-              : <TextArea {...props} aria-label="TextArea Input"/>}
+            <div>
+            {/* <Button onClick={toggleRecording} style={{ marginRight: '10px' }}> */}
+              <Button
+                onClick={toggleRecording}
+                icon={isRecording ? <StopOutlined /> : <AudioOutlined />}
+                className={isRecording ? 'recording' : ''}
+                style={{ marginRight: '10px' }}
+              >
+              {isRecording ? 'Stop Recording' : 'Start Recording'}
+              </Button>
+              {/* <span className={`recording-dot ${isRecording ? 'recording' : 'not-recording'}`}></span> */}
+              {rows === 1
+                ? <Input {...props} aria-label="TextArea Input"/>
+                : <TextArea {...props} aria-label="TextArea Input"/>}
+            </div>
             {showAddButton && (
               <Form.Item>
                 <Button style={{ marginTop: '10px' }} type="primary" htmlType="submit">
