@@ -369,15 +369,24 @@ const HtxTextArea = observer(({ item }) => {
 
     const newRecognition = new SpeechRecognition();
     newRecognition.continuous = true;
-    newRecognition.interimResults = false;
+    newRecognition.interimResults = true;
+
     newRecognition.onresult = event => {
-      const transcript = Array.from(event.results)
-                            .map(result => result[0])
-                            .map(result => result.transcript)
-                            .join('');
-      // item.setValue(item._value + transcript);
-      item.setValue(transcript);
-    };
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          const result = event.results[i];
+          item.setValue(item._value + result[0].transcript);
+        }
+        }
+    }
+    // newRecognition.onresult = event => {
+    //   const transcript = Array.from(event.results)
+    //                         .map(result => result[0])
+    //                         .map(result => result.transcript)
+    //                         .join('');
+    //   item.setValue(item._value + transcript);
+    //   // item.setValue(transcript);
+    // };
     newRecognition.onend = () => setIsRecording(false);
     
     setRecognition(newRecognition);
