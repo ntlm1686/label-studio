@@ -1,4 +1,4 @@
-import React, { createRef, useCallback } from 'react';
+import React, { createRef, useCallback, useState, useEffect } from 'react';
 import Button from 'antd/lib/button/index';
 import Form from 'antd/lib/form/index';
 import Input from 'antd/lib/input/index';
@@ -356,6 +356,48 @@ const TextAreaModel = types.compose(
 );
 
 const HtxTextArea = observer(({ item }) => {
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [recognition, setRecognition] = useState(null);
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      console.error("Speech recognition is not supported in this browser.");
+      return;
+    }
+
+    const newRecognition = new SpeechRecognition();
+    newRecognition.continuous = true;
+    newRecognition.interimResults = false;
+    newRecognition.onresult = event => {
+      const transcript = Array.from(event.results)
+                            .map(result => result[0])
+                            .map(result => result.transcript)
+                            .join('');
+      // item.setValue(item._value + transcript);
+      item.setValue(transcript);
+    };
+    newRecognition.onend = () => setIsRecording(false);
+    
+    setRecognition(newRecognition);
+  }, [item]);
+
+  const toggleRecording = useCallback(() => {
+    if (!recognition) {
+      console.error("Speech recognition is not initialized.");
+      return;
+    }
+
+    if (isRecording) {
+      recognition.stop();
+    } else {
+      recognition.start();
+    }
+
+    setIsRecording(!isRecording);
+  }, [isRecording, recognition]);
+
   const rows = parseInt(item.rows);
   const onFocus = useCallback((ev, model) => {
     if (isFF(FF_DEV_1564_DEV_1565)) {
@@ -432,6 +474,10 @@ const HtxTextArea = observer(({ item }) => {
             return false;
           }}
         >
+          {/* <Button onClick={test_increment} style={{ marginRight: '10px' }}> */}
+          <Button onClick={toggleRecording} style={{ marginRight: '10px' }}>
+            {isRecording ? 'Stop Recording' : 'Start Recording'}
+          </Button>
           <Form.Item style={itemStyle}>
             {rows === 1
               ? <Input {...props} aria-label="TextArea Input"/>
