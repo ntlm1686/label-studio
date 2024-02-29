@@ -375,7 +375,7 @@ const HtxTextArea = observer(({ item }) => {
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
           const result = event.results[i];
-          item.setValue(item._value + result[0].transcript);
+          item.setValue(item._value + result[0].transcript + '.');
         }
         }
     }
